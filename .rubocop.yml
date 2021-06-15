@@ -1,0 +1,6 @@
+AllCops:
+  Exclude:
+    - 'notes/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
