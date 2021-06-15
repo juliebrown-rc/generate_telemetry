@@ -1,9 +1,9 @@
 require './models/action'
 # Base Action
-Action.new("uname -a")
+Action.new('uname -a')
 
 # Spawn Process
-Action.new("ls")
+Action.new('ls')
 
 # Create File
 FileAction.new(:created, 'txt')

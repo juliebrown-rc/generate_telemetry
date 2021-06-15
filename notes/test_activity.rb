@@ -1,77 +1,77 @@
 require 'socket'
 
 def print_system_info
-    puts "SYSTEM INFO"
-    puts "RUBY_PLATFORM = #{RUBY_PLATFORM}"
+  puts 'SYSTEM INFO'
+  puts "RUBY_PLATFORM = #{RUBY_PLATFORM}"
 end
 
-def print_common_attributes(section='')
-    sleep(rand(5..10))
-    # TODO: Process name
-    # TODO: Process command line
-    puts "\n" + section.upcase
-    puts "Timestamp = #{Time.now.utc}"
-    puts "Process ID = #{Process.pid}"
-    puts "uid = #{Process.uid}"
-    puts "Username = #{ENV['USER']}"
+def print_common_attributes(section = '')
+  sleep(rand(5..10))
+  # TODO: Process name
+  # TODO: Process command line
+  puts "\n" + section.upcase
+  puts "Timestamp = #{Time.now.utc}"
+  puts "Process ID = #{Process.pid}"
+  puts "uid = #{Process.uid}"
+  puts "Username = #{ENV['USER']}"
 end
 
 def test_process_start
-    fork_child_pid = Process.fork do
-        print_common_attributes('process start')
-        # puts "$0 = #{$0}\nargv0 = #{Process.argv0}\nARGV = #{ARGV}\nSys.getuid = #{Process::Sys.getuid}"
-    end
-    Process.wait
+  fork_child_pid = Process.fork do
+    print_common_attributes('process start')
+    # puts "$0 = #{$0}\nargv0 = #{Process.argv0}\nARGV = #{ARGV}\nSys.getuid = #{Process::Sys.getuid}"
+  end
+  Process.wait
 end
 
 def print_file_attributes(filename, action)
-    puts "Descriptor = #{action.downcase}"
-    puts "File Path = #{File.absolute_path(filename)}"
-    puts "Created at = #{File.birthtime(filename)}"
-    puts "Modified at = #{File.mtime(filename)}"
-    puts "File Extension = #{File.extname(filename)}"
+  puts "Descriptor = #{action.downcase}"
+  puts "File Path = #{File.absolute_path(filename)}"
+  puts "Created at = #{File.birthtime(filename)}"
+  puts "Modified at = #{File.mtime(filename)}"
+  puts "File Extension = #{File.extname(filename)}"
 end
 
 def file_setup(ext)
-    filename = "test_file_#{Time.now.utc.strftime("%m%d%Y_%H%M%S")}.#{ext}"
-    file = File.open(filename, 'w')
-    file.write("This is some sample text")
-    file.close
-    filename
+  filename = "test_file_#{Time.now.utc.strftime('%m%d%Y_%H%M%S')}.#{ext}"
+  file = File.open(filename, 'w')
+  file.write('This is some sample text')
+  file.close
+  filename
 end
 
 def test_file_creation
-    print_common_attributes('file creation')
-    created_filename = file_setup('txt')
-    print_file_attributes(created_filename, :created)
-    File.delete(created_filename)
+  print_common_attributes('file creation')
+  created_filename = file_setup('txt')
+  print_file_attributes(created_filename, :created)
+  File.delete(created_filename)
 end
 
 def test_file_modification
-    print_common_attributes('file modification')
-    modified_filename = file_setup('txt')
-    puts "sleeping..."
-    sleep(rand(5..10))
-    modified_file = File.open(modified_filename, 'w')
-    modified_file.write("This is additional text added later.")
-    modified_file.close
-    print_file_attributes(modified_filename, :modified)
-    File.delete(modified_filename)
+  print_common_attributes('file modification')
+  modified_filename = file_setup('txt')
+  puts 'sleeping...'
+  sleep(rand(5..10))
+  modified_file = File.open(modified_filename, 'w')
+  modified_file.write('This is additional text added later.')
+  modified_file.close
+  print_file_attributes(modified_filename, :modified)
+  File.delete(modified_filename)
 end
 
 def test_file_deletion
-    print_common_attributes('file deletion')
-    deleted_filename = file_setup('txt')
-    print_file_attributes(deleted_filename, :deleted)
-    File.delete(deleted_filename)
+  print_common_attributes('file deletion')
+  deleted_filename = file_setup('txt')
+  print_file_attributes(deleted_filename, :deleted)
+  File.delete(deleted_filename)
 end
 
 def print_ip_info(socket)
-    puts "Local IP = #{socket.local_address.ip_address}"
-    puts "Local Port = #{socket.local_address.ip_port}"
-    puts "Remote IP = #{socket.remote_address.ip_address}"
-    puts "Remote Port = #{socket.remote_address.ip_port}"
-    puts "Protocol = #{socket.local_address.protocol}"
+  puts "Local IP = #{socket.local_address.ip_address}"
+  puts "Local Port = #{socket.local_address.ip_port}"
+  puts "Remote IP = #{socket.remote_address.ip_address}"
+  puts "Remote Port = #{socket.remote_address.ip_port}"
+  puts "Protocol = #{socket.local_address.protocol}"
 end
 
 # print_system_info
@@ -101,8 +101,8 @@ print_ip_info(s)
 
 response_bytesize = 0
 while line = s.gets
-    puts line
-    response_bytesize += line.bytesize
+  puts line
+  response_bytesize += line.bytesize
 end
 s.close
 
@@ -117,11 +117,6 @@ puts "response_bytesize = #{response_bytesize}"
 # Is there any restrictions on libraries/gems that can be used?
 # Should the files all be placed in the working directory? Do we need to input file path from the config?
 
-
-
-
-
-
 # puts "-------------------------\nFILE"
 # commandline = "uname -a"
 # f = IO.popen(commandline)
@@ -133,13 +128,9 @@ puts "response_bytesize = #{response_bytesize}"
 # f.close
 # puts "$? = #{$?}"
 
-
 # puts "---"
 
 # puts "Process.pid = #{Process.pid}"
-
-
-
 
 # puts "\nBLOCK"
 # IO.popen("date") {|f| puts f.gets }
