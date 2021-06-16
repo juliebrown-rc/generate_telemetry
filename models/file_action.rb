@@ -1,5 +1,4 @@
 require 'fileutils'
-require './models/process_action'
 require './lib/hash_constructed'
 # Actions for creating, modifying, and deleting files
 class FileAction < Action

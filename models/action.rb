@@ -3,7 +3,9 @@ require 'active_support'
 # Base action for generating telemetry
 class Action
   def initialize
+    @timestamp = Time.now.utc
     @username = ENV['USER']
+    @pid = Process.pid
   end
 
   def init_values_from_hash(defaults, hash={})

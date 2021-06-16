@@ -15,7 +15,6 @@ class NetworkConnection < Action
   end
 
   def execute
-    @pid = Process.pid
     connect_to(@url)
   end
 
