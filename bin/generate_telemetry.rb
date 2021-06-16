@@ -14,7 +14,10 @@ end
 
 # Test that config file exists
 config_filename = ARGV[0]
-raise 'Error: File not found. Enter the filename for a valid config file.' unless File.exist?(config_filename.to_s)
+unless File.exist?(config_filename.to_s)
+  puts "Config file not found. Using sample activity..."
+  config_filename = 'example_config.txt'
+end
 
 puts "Reading config file..."
 input = File.open(config_filename).each_line
