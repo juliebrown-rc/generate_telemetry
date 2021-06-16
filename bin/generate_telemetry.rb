@@ -14,56 +14,58 @@ end
 
 # Test that config file exists
 config_filename = ARGV[0]
-unless File.exist?(config_filename.to_s)
-  puts "Config file not found. Using sample activity..."
+if File.exist?(config_filename.to_s)
+  print "Reading config file..."
+else
+  puts "Configuration not found. To supply a list of actions, use 'ruby bin/generate_telemetry.rb my-config.txt'"
   config_filename = 'example_config.txt'
+  print "Using sample config file..."
 end
 
-puts "Reading config file..."
 input = File.open(config_filename).each_line
+puts "done."
 
-puts "Validating input..."
+print "Validating input..."
 action_list = []
 input.each_with_index do |line, l|
-  # puts "Reading line #{l + 1}: #{line}"
-  # ignore comments and empty lines
   next if line.start_with?('#', "\n")
-
-  # get elements of each line
   class_name = line.split(',').first.split(' ').map(&:capitalize).join
-  raise "Error in config file at line #{l+1}: Action type not supported." unless class_exists?(class_name)
+  raise "Error in config file at line #{l + 1}: Action type not supported." unless class_exists?(class_name)
 
   # check that all method params are valid and load into hash before executing
   action = { 'class' => class_name }
   line.split(',')[1..].each do |param|
     key = param.split(':').first.strip
     value = param.split(':')[1].strip
-    # puts "Checking key #{key} against #{class_name} supported attributes: #{Object.const_get(class_name).defaults.keys}"
-    # binding.pry
     unless Object.const_get(class_name).defaults.keys.include? key.to_sym
       raise "Error: invalid parameter #{key} given at line #{l + 1}."
     end
 
-    #{line}\nValid Params for #{class_name}: #{Object.const_get(class_name).defaults.keys}"
     action[key] = value
   end
   action_list << action
 end
+puts "done."
 
-puts "Initializing Actions..."
-# puts "#{action_list.count} actions initialized:\n#{action_list.join("\n")}"
-
+print "Initializing Actions..."
 objects = []
 action_list.each do |hash|
   args_hash = hash.except('class') 
   # puts "running command #{hash['class']}.new(#{args_hash})"
   objects << Object.const_get(hash['class']).new(args_hash)
 end
+puts "done."
 
-puts "Initialized #{objects.count} actions."
+print "Running actions..."
+objects.each(&:execute)
+puts "done."
 
-puts "Running actions..."
-objects.each do |object|
-  puts "#{object.class}..."
-  object.execute
+print "Generating log..."
+output_hash = {}
+objects.each_with_index do |object, index|
+  output_hash["#{index + 1}. #{object.class}"] = object.to_json
 end
+
+output_filename = "log_#{Time.now.utc.strftime('%m%d%Y_%H%M%S')}.json"
+File.write(output_filename, JSON.pretty_generate(output_hash))
+puts "done. (#{output_filename})"

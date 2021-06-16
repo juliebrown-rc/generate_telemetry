@@ -19,8 +19,4 @@ class Action
     end
     hash
   end
-
-  def log
-    puts JSON.pretty_generate(to_json)
-  end
 end

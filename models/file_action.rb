@@ -22,7 +22,7 @@ class FileAction < Action
   end
 
   def execute
-    create_file(@filename)
+    create_file
     case @descriptor
     when :modified
       modify_file(@filename)
@@ -31,35 +31,32 @@ class FileAction < Action
     end
   end
 
-  def create_file(filename)
-    FileUtils.touch(@filename)
-    file_object = File.open(@filename)
-    @filepath = File.absolute_path(file_object)
-    @created_at = File.birthtime(file_object)
-    @extension = File.extname(file_object)
-    file_object.close
-  end
-
-  def modify_file(filepath)
-    sleep(rand(5..10))
-    FileUtils.touch(filepath)
-    @modified_at = File.mtime(filepath)
-  end
-
-  def delete_file(filepath)
-    sleep(rand(5..10))
-    if File.exist?(filepath)
-      File.delete(filepath)
-      @deleted_at = Time.now.utc
-    else
-      # Raise Error: File not found
+  def file_process(command)
+    @commandline = "#{command} #{@filename}"
+    @process_name = @commandline.split(' ')[0]
+    IO.popen(@commandline) do |process|
+      @pid = process.pid
     end
   end
-end
 
-# def create_process(commandline)
-#   f = IO.popen(commandline)
-#   # @output = f.readlines
-#   @pid = f.pid
-#   f.close
-# end
+  def create_file
+    file_process('touch')
+    File.open(@filename) do |file_object|
+      @filepath = File.absolute_path(file_object)
+      @created_at = File.birthtime(file_object)
+      @extension = File.extname(file_object)
+    end
+  end
+
+  def modify_file
+    raise "Error: File not found." unless File.exist?(@filepath)
+    file_process('touch')
+    @modified_at = File.mtime(@filepath)
+  end
+
+  def delete_file
+    raise "Error: File not found." unless File.exist?(@filepath)
+    file_process('rm')
+    @deleted_at = Time.now.utc
+  end
+end
