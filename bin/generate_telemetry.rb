@@ -25,7 +25,7 @@ input = File.open(config_filename).each_line
 puts "Validating input..."
 action_list = []
 input.each_with_index do |line, l|
-  puts "Reading line #{l + 1}: #{line}"
+  # puts "Reading line #{l + 1}: #{line}"
   # ignore comments and empty lines
   next if line.start_with?('#', "\n")
 
@@ -38,7 +38,7 @@ input.each_with_index do |line, l|
   line.split(',')[1..].each do |param|
     key = param.split(':').first.strip
     value = param.split(':')[1].strip
-    puts "Checking key #{key} against #{class_name} supported attributes: #{Object.const_get(class_name).defaults.keys}"
+    # puts "Checking key #{key} against #{class_name} supported attributes: #{Object.const_get(class_name).defaults.keys}"
     # binding.pry
     unless Object.const_get(class_name).defaults.keys.include? key.to_sym
       raise "Error: invalid parameter #{key} given at line #{l + 1}."
