@@ -2,6 +2,7 @@ require './models/action'
 require './models/file_action'
 require './models/network_connection'
 require './models/process_action'
+require 'active_support'
 require 'pry'
 
 # method from stackoverflow
