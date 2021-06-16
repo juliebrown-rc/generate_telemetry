@@ -1,0 +1,12 @@
+# Process Operations
+Process Action, commandline: uname -a
+Process Action, commandline: ls
+
+# File Operations
+File Action, disposition: created, filename: my_new_file.tar
+File Action, disposition: modified, ext: csv
+File Action, disposition: deleted, ext: exe, filename: definitely_not_evil
+
+# Network Operations
+Network Connection, url: www.google.com
+Network Connection, url: www.redcanary.com

@@ -1,24 +1,43 @@
 require 'fileutils'
-
+require './models/process_action'
+require './lib/hash_constructed'
 # Actions for creating, modifying, and deleting files
-class FileAction < ProcessAction
-  def initialize(descriptor, ext = 'txt', filename = "test_file_#{Time.now.utc.strftime('%m%d%Y_%H%M%S')}")
-    @descriptor = descriptor
-    @filename = "#{filename}.#{ext}"
-    cmdline = "touch #{@filename}"
-    super(cmdline)
+class FileAction < Action
+  # include HashConstructed
+  @@defaults = { disposition: :created, filename: "test_file_#{Time.now.utc.strftime('%m%d%Y_%H%M%S')}", ext: 'txt' }
+  attr_accessor :disposition, :filename, :ext
+
+  def self.defaults
+    @@defaults
+  end
+
+  def initialize(hash)
+    super()
+    init_values_from_hash(@@defaults, hash)
+    if @filename.include?('.')
+      @ext = @filename.split('.')[1..].join
+    else
+      @filename = @filename + '.' + @ext
+    end
+  end
+
+  def execute
+    create_file(@filename)
+    case @descriptor
+    when :modified
+      modify_file(@filename)
+    when :deleted
+      delete_file(@filename)
+    end
+  end
+
+  def create_file(filename)
+    FileUtils.touch(@filename)
     file_object = File.open(@filename)
     @filepath = File.absolute_path(file_object)
     @created_at = File.birthtime(file_object)
     @extension = File.extname(file_object)
     file_object.close
-    case @descriptor
-    when :modified
-      modify_file(@filepath)
-    when :deleted
-      delete_file(@filepath)
-    end
-    puts JSON.pretty_generate(to_json)
   end
 
   def modify_file(filepath)
@@ -37,3 +56,10 @@ class FileAction < ProcessAction
     end
   end
 end
+
+# def create_process(commandline)
+#   f = IO.popen(commandline)
+#   # @output = f.readlines
+#   @pid = f.pid
+#   f.close
+# end

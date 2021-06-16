@@ -2,22 +2,20 @@ require 'socket'
 
 # Class for creating a network connection and sending data
 class NetworkConnection < Action
-  # puts "Local IP = #{socket.local_address.ip_address}"
-  # puts "Local Port = #{socket.local_address.ip_port}"
-  # puts "Remote IP = #{socket.remote_address.ip_address}"
-  # puts "Remote Port = #{socket.remote_address.ip_port}"
-  # puts "Protocol = #{socket.local_address.protocol}"
-  # s = TCPSocket.open 'www.google.com', 80
-  # s.puts "GET / HTTP/1.1\n\n"
-  # s.puts "\n\n"
-  # # while line = s.gets
-  # #     puts line.chop
-  # # end
+  @@defaults = { url: 'www.google.com' }
+  attr_accessor :url
 
-  def initialize(url)
-    super
-    connect_to(url)
-    puts JSON.pretty_generate(to_json)
+  def self.defaults
+    @@defaults
+  end
+
+  def initialize(hash = {})
+    super()
+    init_values_from_hash(@@defaults, hash)
+  end
+
+  def execute
+    connect_to(@url)
   end
 
   def connect_to(url)
