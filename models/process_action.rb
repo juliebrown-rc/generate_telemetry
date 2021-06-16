@@ -1,4 +1,4 @@
-# Class for spawning a new process, given a command line and optional arguments
+# Class for spawning a new process, given a command line string
 class ProcessAction < Action
   @@defaults = { commandline: 'ls' }
   attr_accessor :commandline

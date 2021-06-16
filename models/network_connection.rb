@@ -15,6 +15,7 @@ class NetworkConnection < Action
   end
 
   def execute
+    @pid = Process.pid
     connect_to(@url)
   end
 
@@ -26,7 +27,7 @@ class NetworkConnection < Action
     @local_port = s.local_address.ip_port
     @remote_ip = s.remote_address.ip_address
     @remote_port = s.remote_address.ip_port
-    @protocol = s.local_address.protocol
+    @protocol = 'TCP'
 
     s.close_write
     response = s.read
