@@ -2,6 +2,7 @@
 
 source "https://rubygems.org"
 
+gem 'activesupport'
 gem 'fileutils'
 gem 'json'
 gem 'pry'
