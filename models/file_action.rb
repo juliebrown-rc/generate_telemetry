@@ -5,18 +5,19 @@ class FileAction < Action
   # include HashConstructed
   @@defaults = { disposition: :created, filename: "test_file_#{Time.now.utc.strftime('%m%d%Y_%H%M%S')}", ext: 'txt' }
   attr_accessor :disposition, :filename, :ext
+  attr_reader :commandline
 
   def self.defaults
     @@defaults
   end
 
-  def initialize(hash)
+  def initialize(hash = {})
     super()
     init_values_from_hash(@@defaults, hash)
     if @filename.include?('.')
       @ext = @filename.split('.')[1..].join
     else
-      @filename = @filename + '.' + @ext
+      @filename = "#{@filename}.#{@ext}"
     end
   end
 
@@ -49,12 +50,14 @@ class FileAction < Action
 
   def modify_file
     raise "Error: File not found." unless File.exist?(@filepath)
+
     file_process('touch')
     @modified_at = File.mtime(@filepath)
   end
 
   def delete_file
     raise "Error: File not found." unless File.exist?(@filepath)
+
     file_process('rm')
     @deleted_at = Time.now.utc
   end
