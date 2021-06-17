@@ -16,6 +16,7 @@ class ProcessAction < Action
   end
 
   def execute
+    @timestamp = Time.now.utc
     f = IO.popen(@commandline)
     @pid = f.pid
     f.close

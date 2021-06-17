@@ -16,6 +16,7 @@ class NetworkConnection < Action
   end
 
   def execute
+    @timestamp = Time.now.utc
     connect_to(@url)
   end
 

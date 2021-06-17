@@ -2,6 +2,7 @@ require './models/action'
 require './models/file_action'
 require './models/network_connection'
 require './models/process_action'
+require './lib/tell_a_joke'
 require 'active_support'
 require 'pry'
 
@@ -81,3 +82,5 @@ objects.each(&:execute)
 puts "done."
 
 generate_log(objects)
+
+BadJoke.tell_a_new_joke
