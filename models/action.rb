@@ -2,6 +2,8 @@ require 'json'
 require 'active_support'
 # Base action for generating telemetry
 class Action
+  attr_accessor :timestamp, :username, :pid
+
   def initialize
     @timestamp = Time.now.utc
     @username = ENV['USER']

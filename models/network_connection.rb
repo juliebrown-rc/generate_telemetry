@@ -4,6 +4,7 @@ require 'socket'
 class NetworkConnection < Action
   @@defaults = { url: 'www.google.com' }
   attr_accessor :url
+  attr_reader :local_ip, :local_port, :remote_ip, :remote_port, :protocol, :response_bytesize
 
   def self.defaults
     @@defaults
