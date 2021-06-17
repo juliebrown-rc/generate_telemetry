@@ -22,6 +22,7 @@ class FileAction < Action
   end
 
   def execute
+    @timestamp = Time.now.utc
     create_file
     case @descriptor
     when :modified
